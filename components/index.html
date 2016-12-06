@@ -1,0 +1,38 @@
+<script src='../node_modules/webcomponents.js/webcomponents.js'></script>
+<script>
+  var Heap = window.Heap || {}
+  var components = []
+
+  Heap.Component = class {
+    constructor(document) {
+      this.currentScript = document['currentScript' || '_currentScript']
+      this.ownerDocument = this.currentScript.ownerDocument
+      this.templates = this.ownerDocument.getElementsByTagName('template')
+    }
+    register(tagName, elementPrototype) {
+      this.tagName = `heap-${tagName}`
+      this.elementPrototype = elementPrototype
+      return components.push(this)
+    }
+    render() {
+      return document.registerElement(this.tagName, {
+        prototype: Object.create(
+          HTMLElement.prototype,
+          this.elementPrototype
+        )
+      })
+    }
+  }
+
+  window.addEventListener('HTMLImportsLoaded', function(e) {
+    console.log('Imports Loaded')
+    for (let component of components) {
+      component.render()
+      console.log(`Rendered: ${component.tagName}`)
+    }
+  });
+
+  window.addEventListener('WebComponentsReady', function(e) {
+    console.log('Components are ready');
+  });
+</script>
