@@ -2,22 +2,48 @@
 <template>
   <style>
     :host {}
+    button {
+      border: 0;
+    }
   </style>
-  <button>+</button>
-  <button>0</button>
-  <button>-</button>
+  <form>
+    <button>+</button>
+    <button>0</button>
+    <button>-</button>
+  </form>
 </template>
 
 <script>
   const component = new Heap.Component(document)
   component.register('pom', {
-    createdCallback: {
-      value: function() {
-        const root = this.createShadowRoot();
-        const template = component.templates[0];
-        const clone = document.importNode(template.content, true);
-        root.appendChild(clone);
+    prototype: Object.create(HTMLElement.prototype, {
+      // Lifecycle callbacks
+      createdCallback: {
+        value: function () {
+          console.log('-- createdCallback --')
+          const root = this.createShadowRoot()
+          const template = component.templates[0]
+          const node = document.importNode(template.content, true)
+          root.appendChild(node)
+
+          console.log(root.querySelectorAll('button'))
+        }
+      },
+      attachedCallback: {
+        value: function () {
+          console.log('-- attachedCallback --')
+        }
+      },
+      detachedCallback: {
+        value: function () {
+          console.log('-- detachedCallback --')
+        }
+      },
+      attributeChangedCallback: {
+        value: function () {
+          console.log('-- attributeChangedCallback --', arguments)
+        }
       }
-    }
+    })
   })
 </script>

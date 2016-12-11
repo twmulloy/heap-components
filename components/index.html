@@ -9,18 +9,20 @@
       this.ownerDocument = this.currentScript.ownerDocument
       this.templates = this.ownerDocument.getElementsByTagName('template')
     }
-    register(tagName, elementPrototype) {
+    register(tagName, el, fn) {
       this.tagName = `heap-${tagName}`
-      this.elementPrototype = elementPrototype
+      this.el = el
+      this.fn = fn
       return components.push(this)
     }
     render() {
-      return document.registerElement(this.tagName, {
-        prototype: Object.create(
-          HTMLElement.prototype,
-          this.elementPrototype
-        )
-      })
+      return this.registry = document.registerElement(this.tagName, this.el)
+    }
+    run() {
+      if (typeof this.fn !== 'function') {
+        return
+      }
+      return this.fn.call(this)
     }
   }
 
@@ -30,9 +32,13 @@
       component.render()
       console.log(`Rendered: ${component.tagName}`)
     }
-  });
+  })
 
   window.addEventListener('WebComponentsReady', function(e) {
-    console.log('Components are ready');
-  });
+    console.log('Components are ready')
+    for (let component of components) {
+      component.run()
+      console.log(`Ran: ${component.tagName}`)
+    }
+  })
 </script>
