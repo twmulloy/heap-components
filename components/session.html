@@ -1,32 +1,21 @@
-<!-- Plus O'Minus: A better rating system. -->
 <template>
   <style>
-    :host {}
-    button {
-      border: 0;
-    }
   </style>
   <form>
-    <button>+</button>
-    <button>0</button>
-    <button>-</button>
+    <button value='login'>Login</button>
   </form>
 </template>
-
 <script>
-  const component = new Heap.Component(document)
-  component.register('pom', {
+  new Heap.Component('Session', {
     prototype: Object.create(HTMLElement.prototype, {
       // Lifecycle callbacks
       createdCallback: {
         value: function () {
           console.log('-- createdCallback --')
           const root = this.createShadowRoot()
-          const template = component.templates[0]
+          const template = Heap.Components.Session.templates[0]
           const node = document.importNode(template.content, true)
           root.appendChild(node)
-
-          console.log(root.querySelectorAll('button'))
         }
       },
       attachedCallback: {

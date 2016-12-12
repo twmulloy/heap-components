@@ -1,44 +1,29 @@
 <script src='../node_modules/webcomponents.js/webcomponents.js'></script>
 <script>
-  var Heap = window.Heap || {}
-  var components = []
-
+  window.Heap = window.Heap || {}
+  Heap.Components = {}
   Heap.Component = class {
-    constructor(document) {
+    constructor(name, element) {
       this.currentScript = document['currentScript' || '_currentScript']
       this.ownerDocument = this.currentScript.ownerDocument
       this.templates = this.ownerDocument.getElementsByTagName('template')
+      this.tagName = `heap-${name.toLowerCase()}`
+      this.element = element
+      Heap.Components[name] = this
     }
-    register(tagName, el, fn) {
-      this.tagName = `heap-${tagName}`
-      this.el = el
-      this.fn = fn
-      return components.push(this)
-    }
-    render() {
-      return this.registry = document.registerElement(this.tagName, this.el)
-    }
-    run() {
-      if (typeof this.fn !== 'function') {
-        return
-      }
-      return this.fn.call(this)
+    register() {
+      return document.registerElement(this.tagName, this.element)
     }
   }
 
   window.addEventListener('HTMLImportsLoaded', function(e) {
     console.log('Imports Loaded')
-    for (let component of components) {
-      component.render()
-      console.log(`Rendered: ${component.tagName}`)
+    for (let name in Heap.Components) {
+      Heap.Components[name].register()
     }
   })
 
   window.addEventListener('WebComponentsReady', function(e) {
     console.log('Components are ready')
-    for (let component of components) {
-      component.run()
-      console.log(`Ran: ${component.tagName}`)
-    }
   })
 </script>
