@@ -1,25 +1,47 @@
 <script src='../node_modules/webcomponents.js/webcomponents.js'></script>
 <script>
   window.Heap = window.Heap || {}
-  Heap.Components = {}
-  Heap.Component = class {
-    constructor(name, element) {
-      this.currentScript = document['currentScript' || '_currentScript']
-      this.ownerDocument = this.currentScript.ownerDocument
-      this.templates = this.ownerDocument.getElementsByTagName('template')
-      this.tagName = `heap-${name.toLowerCase()}`
-      this.element = element
-      Heap.Components[name] = this
-    }
-    register() {
-      return document.registerElement(this.tagName, this.element)
+  Heap.c = {
+    api: {
+      host: 'https://api.hheap.com',
+      version: 'v1',
+      routes: {
+        session: 'me'
+      }
+    },
+    components: {},
+    xhr: function (method, url) {
+      let xhr = new XMLHttpRequest()
+      if ('withCredentials' in xhr) {
+        xhr.open(method, url, true)
+      } else if (typeof XDomainRequest !== 'undefined') {
+        xhr = new XDomainRequest()
+        xhr.open(method, url)
+      } else {
+        xhr = null
+      }
+      if (!xhr) throw new Error('CORS not supported')
+      return xhr
+    },
+    Component: class {
+      constructor(name, element) {
+        this.currentScript = document['currentScript' || '_currentScript']
+        this.ownerDocument = this.currentScript.ownerDocument
+        this.templates = this.ownerDocument.getElementsByTagName('template')
+        this.tagName = `heap-${name.toLowerCase()}`
+        this.element = element
+        Heap.c.components[name] = this
+      }
+      register() {
+        return document.registerElement(this.tagName, this.element)
+      }
     }
   }
 
   window.addEventListener('HTMLImportsLoaded', function(e) {
     console.log('Imports Loaded')
-    for (let name in Heap.Components) {
-      Heap.Components[name].register()
+    for (let name in Heap.c.components) {
+      Heap.c.components[name].register()
     }
   })
 

@@ -6,14 +6,14 @@
   </form>
 </template>
 <script>
-  new Heap.Component('Session', {
+  new Heap.c.Component('Session', {
     prototype: Object.create(HTMLElement.prototype, {
       // Lifecycle callbacks
       createdCallback: {
         value: function () {
           console.log('-- createdCallback --')
           const root = this.createShadowRoot()
-          const template = Heap.Components.Session.templates[0]
+          const template = Heap.c.components.Session.templates[0]
           const node = document.importNode(template.content, true)
           root.appendChild(node)
         }
