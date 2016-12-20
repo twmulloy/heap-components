@@ -8,14 +8,14 @@
   </form>
 </template>
 <script>
-  new Heap.c.Component('Vote', {
+  new h.c.Component('Vote', {
     prototype: Object.create(HTMLElement.prototype, {
       // Lifecycle callbacks
       createdCallback: {
         value: function () {
           console.log('-- createdCallback --')
           const root = this.createShadowRoot()
-          const template = Heap.c.components.Vote.templates[0]
+          const template = h.c.components.Vote.templates[0]
           const node = document.importNode(template.content, true)
           root.appendChild(node)
 
@@ -36,12 +36,12 @@
 
           // Cry baby
           const url = [
-            Heap.c.api.host,
-            Heap.c.api.version,
-            Heap.c.api.routes.session
+            h.c.api.host,
+            h.c.api.version,
+            h.c.api.routes.session
           ].join('/')
 
-          const xhr = Heap.c.xhr('GET', url)
+          const xhr = h.c.xhr('GET', url)
           xhr.onload = function() {
             console.log('onload', this)
           }
