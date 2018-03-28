@@ -1,5 +1,7 @@
 window.h = window.h || {}
 h.a = (function(document) {
+  // TODO: Determine `baseUrl`
+  const baseUrl = '//cdn.rawgit.com/twmulloy/heap-components/master'
   const path = 'components'
   const ext = '.html'
   const libs = ['']
@@ -7,7 +9,7 @@ h.a = (function(document) {
   let components = []
 
   function loadComponent(component) {
-    const href = !!component ? [path, component + ext].join('/') : path
+    const href = !!component ? [baseUrl, path, component + ext].join('/') : path
     let element = document.createElement('link')
     element.setAttribute('rel', 'import')
     element.setAttribute('href', href)
